@@ -21,7 +21,17 @@
     <b-button variant="outline-primary" v-b-modal.modal-1 right>EDIT</b-button>
 
     <b-modal id="modal-1" title="Редактор локаций">
+      <b-card header="Card with list group">
+        <b-list-group v-for="(index, row) in locations" :key="index">
+            <b-list-group-item href="#">{{row}}</b-list-group-item>
+        </b-list-group>
 
+        <p class="card-text mt-2">
+          Quis magna Lorem anim amet ipsum do mollit sit cillum voluptate ex nulla tempor. Laborum
+          consequat non elit enim exercitation cillum aliqua consequat id aliqua. Esse ex consectetur
+          mollit voluptate est in duis laboris ad sit ipsum anim Lorem.
+        </p>
+      </b-card>
     </b-modal>
 
   </b-navbar>
@@ -33,6 +43,7 @@ import {Component, Vue} from "vue-property-decorator";
 @Component
 
 export default class NavBar extends Vue{
+
 }
 </script>
 
