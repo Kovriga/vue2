@@ -5,13 +5,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: '6c0b34cce44846eb9675c8a8d814ec78'
+    token: '3c0b22cd29b143c38d8eee69527b1985',
+    locationArray: []
   },
   getters: {
   },
   mutations: {
     getToken(state, token: string) {
       state.token = token
+    },
+    getLocationArray(state, array: any) {
+      state.locationArray = array
     }
   },
   actions: {
