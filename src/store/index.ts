@@ -5,8 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: '3c0b22cd29b143c38d8eee69527b1985',
-    locationArray: []
+    token: '',
+    locationArray: [],
+    dataArray: []
   },
   getters: {
   },
@@ -14,8 +15,13 @@ export default new Vuex.Store({
     getToken(state, token: string) {
       state.token = token
     },
+
     getLocationArray(state, array: any) {
       state.locationArray = array
+    },
+
+    getDataArray(state, array: any) {
+      state.dataArray = array
     }
   },
   actions: {
