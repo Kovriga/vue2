@@ -15,48 +15,48 @@
           transition="dialog-top-transition"
           max-width="600"
       >
-          <v-card>
-            <v-toolbar
+        <v-card>
+          <v-toolbar
+              color="primary"
+              dark
+          ><h4>Добавление данных в таблицу</h4>
+          </v-toolbar>
+          <v-card-text>
+            <div>
+              <v-text-field v-model="name" label="Name"></v-text-field>
+            </div>
+            <v-checkbox
+                v-model="checkbox"
+                label="Status"
+            ></v-checkbox>
+            <v-select
+                v-model="select"
+                :items="$store.state.locationArray"
+                item-text="name"
+                label="Location"
+                persistent-hint
+                single-line
+            ></v-select>
+            <v-textarea
+                label="Comment"
+                v-model="comment"
+            ></v-textarea>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn
+                text
+                @click="isInit = false"
+            >Закрыть
+            </v-btn>
+            <v-btn
                 color="primary"
                 dark
-            ><h4>Добавление данных в таблицу</h4>
-            </v-toolbar>
-            <v-card-text>
-              <div>
-                <v-text-field v-model="name" label="Name"></v-text-field>
-              </div>
-              <v-checkbox
-                  v-model="checkbox"
-                  label="Status"
-              ></v-checkbox>
-              <v-select
-                  v-model="select"
-                  :items="$store.state.locationArray"
-                  item-text="name"
-                  label="Location"
-                  persistent-hint
-                  single-line
-              ></v-select>
-              <v-textarea
-                  label="Comment"
-                  v-model="comment"
-              ></v-textarea>
-            </v-card-text>
-            <v-card-actions class="justify-end">
-              <v-btn
-                  text
-                  @click="isInit = false"
-              >Закрыть
-              </v-btn>
-              <v-btn
-                  color="primary"
-                  dark
-                  @click="addData()"
-              >
-                Добавить
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+                @click="addData()"
+            >
+              Добавить
+            </v-btn>
+          </v-card-actions>
+        </v-card>
       </v-dialog>
 
       <v-data-table
@@ -98,11 +98,65 @@
           ></v-checkbox>
         </template>
         <template v-slot:[`item.type`]="{ item }">
-          <v-icon
-              small
-              @click="openEditDialogType(item)"
-          >mdi-eye</v-icon>
+          <v-dialog
 
+              v-model="dialog"
+              width="500"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="id = item.id"
+              >
+                <v-icon>mdi-clipboard-edit</v-icon>
+              </v-btn>
+            </template>
+
+            <v-card  v-if="item.id === id">
+              <v-card-title>
+                Type
+              </v-card-title>
+
+              <v-card-text>
+                <div class="input-location">
+                  <v-text-field v-model="nameType" @keyup.enter="nameType.length && addType(item.id)"
+                                label="Введите название локации"></v-text-field>
+                  <b-button @click="addType(item.id)" :disabled="nameType === ''" variant="primary">Add</b-button>
+                </div>
+                <v-list class="list" flat>
+                  <v-list-item-group
+                      color="primary"
+                  >
+                    <v-list-item
+                        v-for="(row, i) in item.type"
+                        :key="i"
+                    >
+                      <v-list-item-content>
+                        <v-list-item-title v-text="row"></v-list-item-title>
+                      </v-list-item-content>
+                      <v-list-item-icon>
+                        <v-icon @click="deleteType(item, row)">mdi-delete</v-icon>
+                      </v-list-item-icon>
+                    </v-list-item>
+                  </v-list-item-group>
+                </v-list>
+              </v-card-text>
+
+              <v-divider></v-divider>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="primary"
+                    text
+                    @click="dialog = false"
+                >
+                  I accept
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
       </v-data-table>
       <v-card-text class="text-center py-6 mt-9" v-else>
@@ -110,53 +164,12 @@
       </v-card-text>
     </v-card>
 
-    <v-dialog
-        v-model="isInitType"
-        hide-overlay
-        persistent
-        transition="dialog-top-transition"
-        max-width="600"
-    >
-      <v-card>
-        <v-card-text>
-          <div class="input-location">
-            <v-text-field v-model="nameType" @keyup.enter="nameType.length && addType()"
-                          label="Введите Type"></v-text-field>
-            <b-button @click="addType()" :disabled="nameType === ''" variant="primary">Add</b-button>
-          </div>
-          <v-list class="list" flat>
-            <v-list-item-group
-                color="primary"
-            >
-              <v-list-item
-                  v-for="(item, i) in watchType.type"
-                  :key="i"
-              >
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.type"></v-list-item-title>
-                </v-list-item-content>
-                <v-list-item-icon>
-                  <v-icon @click="deleteType(item)">mdi-delete</v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-card-text>
-        <v-card-actions class="justify-end">
-          <v-btn
-              text
-              @click="isInitType = false"
-          >Закрыть
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator";
+import {Component, Vue, Watch} from "vue-property-decorator";
 import NavBar from "@/components/NavBar.vue";
 import store from "@/store";
 
@@ -165,16 +178,16 @@ import store from "@/store";
 })
 
 export default class DashBoard extends Vue {
-
   checkbox = false;
   name = '';
   comment = '';
   select = '';
   id = '';
   isInit = false;
-  isInitType = false;
   nameType = '';
   watchType: any = [];
+  type: any = [];
+  dialog = false;
 
   headers = [
     {text: 'ID', value: 'id'},
@@ -189,12 +202,12 @@ export default class DashBoard extends Vue {
     this.getData()
   }
 
-  get dataArray():any {
+  get dataArray(): any {
     return JSON.parse(JSON.stringify(this.$store.state.dataArray))
   }
 
-  addType(): void {
-    let watchType = this.watchType.id
+  addType(item: string, ): void {
+    let watchType = item;
     let nameType = this.nameType
     let socket = new WebSocket("ws://185.246.65.199:8888/");
     socket.onopen = function () {
@@ -206,75 +219,69 @@ export default class DashBoard extends Vue {
       }));
     };
     this.nameType = '';
-    this.getData();
+    this.getData()
   }
 
-  deleteType(item: any) {
-    let watchType = this.watchType.id
+  deleteType(item: any, row: any) {
     let socket = new WebSocket("ws://185.246.65.199:8888/");
     socket.onopen = function () {
       socket.send(JSON.stringify({
         operation: "deleteType",
         token: String(store.state.token),
-        id: String(watchType),
-        type_id: String(item.id)
+        id: String(item.id),
+        type_id: String(row.id)
       }));
     };
     this.getData();
   }
 
-  openEditDialogType(item:any): void {
-    this.watchType = item
-    this.isInitType = true
-  }
-
-  editLocation(item: any): void{
+  editLocation(item: any): void {
     let socket = new WebSocket("ws://185.246.65.199:8888/");
     socket.onopen = function () {
       socket.send(JSON.stringify({
         operation: "editInputLocation",
         token: String(store.state.token),
         inputLocation: String(item.inputLocation),
-        id: String (item.id)
+        id: String(item.id)
       }));
     };
     this.getData();
   }
 
-  editStatus(item: any) :void {
+  editStatus(item: any): void {
     let socket = new WebSocket("ws://185.246.65.199:8888/");
     socket.onopen = function () {
       socket.send(JSON.stringify({
         operation: "editStatus",
         token: String(store.state.token),
         status: Boolean(item.status),
-        id: String (item.id)
+        id: String(item.id)
       }));
     };
     this.getData();
   }
 
-  editComment(item: any){
+  editComment(item: any) {
     let socket = new WebSocket("ws://185.246.65.199:8888/");
     socket.onopen = function () {
       socket.send(JSON.stringify({
         operation: "editComment",
         token: String(store.state.token),
         comment: String(item.comment),
-        id: String (item.id)
+        id: String(item.id)
       }));
     };
     this.getData();
   }
 
-  editName(item:any): void {
+  editName(item: any): void {
     let socket = new WebSocket("ws://185.246.65.199:8888/");
     socket.onopen = function () {
       socket.send(JSON.stringify({
         operation: "editName",
         token: String(store.state.token),
         name: String(item.name),
-        id: String (item.id)
+        id: String(item.id)
       }));
     };
     this.getData();
