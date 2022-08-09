@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: 'd72e61958109419485d4a9f72190e9d5',
+    token: '',
     locationArray: [],
     dataArray: []
   },
